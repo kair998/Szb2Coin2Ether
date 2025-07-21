@@ -1,3 +1,5 @@
+package com.example.Coin2Ether;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,12 +20,22 @@ public class Coin2Ether {
         boolean isFlashCard;
         boolean isSpecial;
 
+        int bulletNumber;
+
+        int isCopper;
+        int isSilver;
+        int isGold;
+        int isRainbow;
+        int isSpecialCoupon;
+
         public Card(){
 
         }
 
-        public Card(boolean isC, boolean isSil, boolean isG, boolean isR,
+        public Card(int bulletNum, boolean isC, boolean isSil, boolean isG, boolean isR,
                     boolean isF, boolean isSp){
+            bulletNumber = bulletNum;
+
             isCopperCard = isC;
             isSilverCard = isSil;
             isGoldCard = isG;
@@ -34,6 +46,9 @@ public class Coin2Ether {
 
         public String cardParser() {
             String rs = "";
+
+            rs += "The " + bulletNumber + " card: ";
+
             if (isCopperCard) {
                 rs += "铜";
             } else if (isSilverCard) {
@@ -53,11 +68,51 @@ public class Coin2Ether {
             return rs;
         }
 
+        void setNormalProbability(int bulletNumber){
+
+            switch (bulletNumber){
+                case 1:
+                    isCopper = 67440;
+                    isSilver = 92440;
+                    isGold = 98440;
+                    isRainbow = 99940;
+                    isSpecialCoupon = 100000;
+                    break;
+                case 2:
+
+                    isCopper = 67455;
+                    isSilver = 92455;
+                    isGold = 98455;
+                    isRainbow = 99955;
+                    isSpecialCoupon = 10000;
+                    break;
+            }
+        }
+
+        void setSilverBetterProbability(int bulletNumber){
+
+            switch (bulletNumber){
+                case 1:
+                    isSilver = 92440;
+                    isGold = 98440;
+                    isRainbow = 99940;
+                    isSpecialCoupon = 100000;
+                    break;
+                case 2:
+                    isSilver = 92455;
+                    isGold = 98455;
+                    isRainbow = 99955;
+                    isSpecialCoupon = 10000;
+                    break;
+            }
+        }
+
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
             Card c = (Card) o;
-            return  this.isCopperCard == c.isCopperCard &&
+            return  this.bulletNumber == c.bulletNumber &&
+                    this.isCopperCard == c.isCopperCard &&
                     this.isSilverCard == c.isSilverCard &&
                     this.isGoldCard == c.isGoldCard &&
                     this.isRainbowCard == c.isRainbowCard &&
@@ -67,7 +122,8 @@ public class Coin2Ether {
 
         @Override
         public int hashCode() {
-            return  Boolean.hashCode(isCopperCard) +
+            return  Integer.hashCode(bulletNumber) +
+                    Boolean.hashCode(isCopperCard) +
                     Boolean.hashCode(isSilverCard) +
                     Boolean.hashCode(isGoldCard) +
                     Boolean.hashCode(isRainbowCard) +
@@ -80,34 +136,32 @@ public class Coin2Ether {
     //非保底卡牌
     public static class NormalCard extends Card{
 
-        public NormalCard(boolean isC, boolean isSil, boolean isG, boolean isR, boolean isF, boolean isSp) {
-            super(isC, isSil, isG, isR, isF, isSp);
+        public NormalCard(int bN, boolean isC, boolean isSil, boolean isG, boolean isR, boolean isF, boolean isSp) {
+            super(bN, isC, isSil, isG, isR, isF, isSp);
         }
 
-        public NormalCard(){
-            CardMaker();
+        public NormalCard(int bN){
+            //设置好bulletNumber值
+            super.bulletNumber = bN;
+            CardMaker(bN);
         }
 
-        private void CardMaker(){
+        private void CardMaker(int bulletNumber){
             Random rand = new Random();
 
-            int copper = 6744;
-            int silver = 9244;
-            int gold = 9844;
-            int rainbow = 9994;
-            int special = 10000;
+            setNormalProbability(bulletNumber);
 
-            int cardChance = rand.nextInt(10000) + 1;
+            int cardChance = rand.nextInt(100000) + 1;
 
-            if(cardChance <= 6744){
+            if(cardChance <= isCopper){
                 isCopperCard = true;
-            }else if(cardChance > 6744 && cardChance <= 9244){
+            }else if(cardChance > isCopper && cardChance <= isSilver){
                 isSilverCard = true;
-            }else if(cardChance > 9244 && cardChance <= 9844){
+            }else if(cardChance > isSilver && cardChance <= isGold){
                 isGoldCard = true;
-            }else if(cardChance > 9844 && cardChance <= 9994){
+            }else if(cardChance > isGold && cardChance <= isRainbow){
                 isRainbowCard = true;
-            }else if(cardChance > 9994 && cardChance <= 10000){
+            }else if(cardChance > isRainbow && cardChance <= isSpecialCoupon){
                 isSpecial = true;
             }
 
@@ -124,31 +178,29 @@ public class Coin2Ether {
 
     //保底银卡以上
     public static class silverBetterCard extends Card{
-        public silverBetterCard(boolean isC, boolean isSil, boolean isG, boolean isR, boolean isF, boolean isSp) {
-            super(isC, isSil, isG, isR, isF, isSp);
+        public silverBetterCard(int bN, boolean isC, boolean isSil, boolean isG, boolean isR, boolean isF, boolean isSp) {
+            super(bN, isC, isSil, isG, isR, isF, isSp);
         }
 
-        public silverBetterCard(){
-            CardMaker();
+        public silverBetterCard(int bN){
+            super.bulletNumber = bN;
+            CardMaker(bN);
         }
 
-        private void CardMaker(){
+        private void CardMaker(int bulletNumber){
             Random rand = new Random();
 
-            int silver = 9244;
-            int gold = 9844;
-            int rainbow = 9994;
-            int special = 10000;
+            setSilverBetterProbability(bulletNumber);
 
-            int cardChance = rand.nextInt(10000) + 1;
+            int cardChance = rand.nextInt(100000) + 1;
 
-            if(cardChance <= 9244){
+            if(cardChance <= isSilver){
                 isSilverCard = true;
-            }else if(cardChance > 9244 && cardChance <= 9844){
+            }else if(cardChance > isSilver && cardChance <= isGold){
                 isGoldCard = true;
-            }else if(cardChance > 9844 && cardChance <= 9994){
+            }else if(cardChance > isGold && cardChance <= isRainbow){
                 isRainbowCard = true;
-            }else if(cardChance > 9994 && cardChance <= 10000){
+            }else if(cardChance > isRainbow && cardChance <= isSpecialCoupon){
                 isSpecial = true;
             }
 
@@ -164,15 +216,16 @@ public class Coin2Ether {
 
     //必出虹卡
     public static class mustRainbow extends Card{
-        public mustRainbow(boolean isC, boolean isSil, boolean isG, boolean isR, boolean isF, boolean isSp) {
-            super(isC, isSil, isG, isR, isF, isSp);
+        public mustRainbow(int bN, boolean isC, boolean isSil, boolean isG, boolean isR, boolean isF, boolean isSp) {
+            super(bN, isC, isSil, isG, isR, isF, isSp);
         }
 
-        public mustRainbow(){
-            CardMaker();
+        public mustRainbow(int bN){
+            super.bulletNumber = bN;
+            CardMaker(bN);
         }
 
-        private void CardMaker(){
+        private void CardMaker(int bulletNumber){
             Random rand = new Random();
 
             isRainbowCard = true;
@@ -193,21 +246,25 @@ public class Coin2Ether {
 
         int noRainbow;
 
+        int curBullet;
+
         int drawPacks;
 
-        public Draw(int noRainbow){
+        public Draw(int noRainbow, int curB){
             logs = new ArrayList<>();
 
             drawPacks = 0;
             this.noRainbow = noRainbow;
+            this.curBullet = curB;
             statisticCards = new HashMap<>();
         }
 
-        public Draw(){
+        public Draw(int curB){
             logs = new ArrayList<>();
 
             drawPacks = 0;
             this.noRainbow = 0;
+            this.curBullet = curB;
             statisticCards = new HashMap<>();
         }
 
@@ -242,7 +299,7 @@ public class Coin2Ether {
                 if(i == 1){
                     String info = "";
 
-                    Card curCard = new silverBetterCard();
+                    Card curCard = new silverBetterCard(curBullet);
                     statisticCards.put(curCard, statisticCards.getOrDefault(curCard, 0) + 1);
                     if(curCard.isRainbowCard){
                         existRainbow = true;
@@ -257,7 +314,7 @@ public class Coin2Ether {
                 if(i == 2){
                     String info = "";
 
-                    Card curCard = new mustRainbow();
+                    Card curCard = new mustRainbow(curBullet);
                     statisticCards.put(curCard, statisticCards.getOrDefault(curCard, 0) + 1);
                     if(curCard.isRainbowCard){
                         existRainbow = true;
@@ -271,7 +328,7 @@ public class Coin2Ether {
                 }
                 String info = "";
 
-                Card curCard = new NormalCard();
+                Card curCard = new NormalCard(curBullet);
                 statisticCards.put(curCard, statisticCards.getOrDefault(curCard, 0) + 1);
                 if(curCard.isRainbowCard){
                     existRainbow = true;
@@ -293,7 +350,7 @@ public class Coin2Ether {
                 if(i == 1){
                     String info = "";
 
-                    Card curCard = new silverBetterCard();
+                    Card curCard = new silverBetterCard(curBullet);
                     statisticCards.put(curCard, statisticCards.getOrDefault(curCard, 0) + 1);
                     if(curCard.isRainbowCard){
                         existRainbow = true;
@@ -307,7 +364,7 @@ public class Coin2Ether {
                 }
                 String info = "";
 
-                Card curCard = new NormalCard();
+                Card curCard = new NormalCard(curBullet);
                 statisticCards.put(curCard, statisticCards.getOrDefault(curCard, 0) + 1);
                 if(curCard.isRainbowCard){
                     existRainbow = true;
@@ -346,6 +403,9 @@ public class Coin2Ether {
     }
 
     public static class toEther{
+
+        int curBullet;
+
         //只抽取第一弹卡包：传说揭幕
         //铜卡分解   10eth
         //铜闪分解   30eth
@@ -362,19 +422,19 @@ public class Coin2Ether {
         //37银卡
         //45铜卡
 
-        final static int COPPER_2_ETHER = 10;
-        final static int COPPER_FLASH_2_ETHER = 30;
-        final static int SILVER_2_ETHER = 20;
-        final static int SILVER_FLASH_2_ETHER = 50;
-        final static int GOLD_2_ETHER = 200;
-        final static int GOLD_FLASH_2_ETHER = 450;
-        final static int RAINBOW_2_ETHER = 1200;
-        final static int RAINBOW_FLASH_2_ETHER = 2500;
+        int COPPER_2_ETHER;
+        int COPPER_FLASH_2_ETHER;
+        int SILVER_2_ETHER;
+        int SILVER_FLASH_2_ETHER;
+        int GOLD_2_ETHER;
+        int GOLD_FLASH_2_ETHER;
+        int RAINBOW_2_ETHER;
+        int RAINBOW_FLASH_2_ETHER;
 
-        final static int COPPER_TOTAL = 45;
-        final static int SILVER_TOTAL = 37;
-        final static int GOLD_TOTAL = 37;
-        final static int RAINBOW_TOTAL = 23;
+        int COPPER_TOTAL;
+        int SILVER_TOTAL;
+        int GOLD_TOTAL;
+        int RAINBOW_TOTAL;
 
         int rainbow0Of3;
         int rainbow1Of3;
@@ -398,42 +458,86 @@ public class Coin2Ether {
 
         Draw draw;
 
+        private void setCardPack(int curBullet){
+            switch (curBullet){
+                case 1:
+                    COPPER_2_ETHER = 10;
+                    COPPER_FLASH_2_ETHER = 30;
+                    SILVER_2_ETHER = 20;
+                    SILVER_FLASH_2_ETHER = 50;
+                    GOLD_2_ETHER = 200;
+                    GOLD_FLASH_2_ETHER = 450;
+                    RAINBOW_2_ETHER = 1200;
+                    RAINBOW_FLASH_2_ETHER = 2500;
+
+                    COPPER_TOTAL = 45;
+                    SILVER_TOTAL = 37;
+                    GOLD_TOTAL = 37;
+                    RAINBOW_TOTAL = 23;
+                    break;
+                case 2:
+                    COPPER_2_ETHER = 10;
+                    COPPER_FLASH_2_ETHER = 30;
+                    SILVER_2_ETHER = 20;
+                    SILVER_FLASH_2_ETHER = 50;
+                    GOLD_2_ETHER = 200;
+                    GOLD_FLASH_2_ETHER = 450;
+                    RAINBOW_2_ETHER = 1200;
+                    RAINBOW_FLASH_2_ETHER = 2500;
+
+                    COPPER_TOTAL = 23;
+                    SILVER_TOTAL = 22;
+                    GOLD_TOTAL = 16;
+                    RAINBOW_TOTAL = 16;
+                    break;
+            }
+        }
+
         //全虹无闪满三
-        public toEther(int coin){
+        public toEther(int curB, int coin){
+            curBullet = curB;
+            setCardPack(curBullet);
+
             drawChance = coin / 500;
-            draw = new Draw();
+            draw = new Draw(curB);
 
             rainbow0Of3 = 0;
             rainbow1Of3 = 0;
             rainbow2Of3 = 0;
-            rainbow3Of3 = 23;
+            rainbow3Of3 = RAINBOW_TOTAL;
 
             gold0Of3 = 0;
             gold1Of3 = 0;
             gold2Of3 = 0;
-            gold3Of3 = 37;
+            gold3Of3 = GOLD_TOTAL;
         }
 
 
-        public toEther(int coin, int mustRainbow){
+        public toEther(int curB, int coin, int mustRainbow){
+            curBullet = curB;
+            setCardPack(curBullet);
+
             drawChance = coin / 500;
-            draw = new Draw(10 - mustRainbow);
+            draw = new Draw(10 - mustRainbow, curB);
 
             rainbow0Of3 = 0;
             rainbow1Of3 = 0;
             rainbow2Of3 = 0;
-            rainbow3Of3 = 23;
+            rainbow3Of3 = RAINBOW_TOTAL;
 
             gold0Of3 = 0;
             gold1Of3 = 0;
             gold2Of3 = 0;
-            gold3Of3 = 37;
+            gold3Of3 = GOLD_TOTAL;
         }
 
-        public toEther(int coin, int mustRainbow, int r03, int r13, int r23, int r33,
-                                                  int g03, int g13, int g23, int g33){
+        public toEther(int curB, int coin, int mustRainbow, int r03, int r13, int r23, int r33,
+                       int g03, int g13, int g23, int g33){
+            curBullet = curB;
+            setCardPack(curBullet);
+
             drawChance = coin / 500;
-            draw = new Draw(10 - mustRainbow);
+            draw = new Draw(10 - mustRainbow, curB);
 
             rainbow0Of3 = r03;
             rainbow1Of3 = r13;
@@ -459,8 +563,8 @@ public class Coin2Ether {
 
         public int getRainbowCardTotal(HashMap<Card, Integer> drawResult, boolean isFlash){
 
-            Card rainbowCard = new Card(false,false,false,true,false,false);
-            Card rainbowFlashCard = new Card(false,false,false,true,true,false);
+            Card rainbowCard = new Card(curBullet,false,false,false,true,false,false);
+            Card rainbowFlashCard = new Card(curBullet,false,false,false,true,true,false);
 
             Card pointedCard;
 
@@ -517,7 +621,7 @@ public class Coin2Ether {
                     full3 = (double) rainbow3Of3 / RAINBOW_TOTAL;
                     full2 = (double) rainbow2Of3 / RAINBOW_TOTAL;
                 }else{
-                    rainbow2Ether += 1200;
+                    rainbow2Ether += RAINBOW_2_ETHER;
                 }
             }
 
@@ -540,7 +644,7 @@ public class Coin2Ether {
                     full3 = (double) rainbow3Of3 / RAINBOW_TOTAL;
                     full2 = (double) rainbow2Of3 / RAINBOW_TOTAL;
                 }else{
-                    rainbow2Ether += 2500;
+                    rainbow2Ether += RAINBOW_FLASH_2_ETHER;
                 }
             }
 
@@ -549,8 +653,8 @@ public class Coin2Ether {
 
         public int getGoldCardTotal(HashMap<Card, Integer> drawResult, boolean isFlash){
 
-            Card goldCard = new Card(false,false,true,false,false,false);
-            Card goldFlashCard = new Card(false,false,true,false,true,false);
+            Card goldCard = new Card(curBullet,false,false,true,false,false,false);
+            Card goldFlashCard = new Card(curBullet,false,false,true,false,true,false);
 
             Card pointedCard;
 
@@ -580,30 +684,30 @@ public class Coin2Ether {
             int goldFlashs = getGoldCardTotal(drawResult, true);
             //System.out.println("金闪 ：" + goldFlashs);
 
-            double full3 = (double) gold3Of3 / RAINBOW_TOTAL;
-            double full2 = (double) gold2Of3 / RAINBOW_TOTAL;
-            double full1 = (double) gold1Of3 / RAINBOW_TOTAL;
-            double full0 = (double) gold0Of3 / RAINBOW_TOTAL;
+            double full3 = (double) gold3Of3 / GOLD_TOTAL;
+            double full2 = (double) gold2Of3 / GOLD_TOTAL;
+            double full1 = (double) gold1Of3 / GOLD_TOTAL;
+            double full0 = (double) gold0Of3 / GOLD_TOTAL;
 
             for(int i = 0; i < golds; i++){
                 double r = Math.random();
                 if(r < full0){
                     gold0Of3 -= 1;
                     gold1Of3 += 1;
-                    full0 = (double) gold0Of3 / RAINBOW_TOTAL;
-                    full1 = (double) gold1Of3 / RAINBOW_TOTAL;
+                    full0 = (double) gold0Of3 / GOLD_TOTAL;
+                    full1 = (double) gold1Of3 / GOLD_TOTAL;
                 }else if(r >= full0 && r < (full0 + full1)){
                     gold1Of3 -= 1;
                     gold2Of3 += 1;
-                    full2 = (double) gold2Of3 / RAINBOW_TOTAL;
-                    full1 = (double) gold1Of3 / RAINBOW_TOTAL;
+                    full2 = (double) gold2Of3 / GOLD_TOTAL;
+                    full1 = (double) gold1Of3 / GOLD_TOTAL;
                 }else if(r >= (full0 + full1) && r < (full0 + full1 + full2)){
                     gold2Of3 -= 1;
                     gold3Of3 += 1;
-                    full3 = (double) gold3Of3 / RAINBOW_TOTAL;
-                    full2 = (double) gold2Of3 / RAINBOW_TOTAL;
+                    full3 = (double) gold3Of3 / GOLD_TOTAL;
+                    full2 = (double) gold2Of3 / GOLD_TOTAL;
                 }else{
-                    gold2Ether += 200;
+                    gold2Ether += GOLD_2_ETHER;
                 }
             }
 
@@ -612,20 +716,20 @@ public class Coin2Ether {
                 if(r < full0){
                     gold0Of3 -= 1;
                     gold1Of3 += 1;
-                    full0 = (double) gold0Of3 / RAINBOW_TOTAL;
-                    full1 = (double) gold1Of3 / RAINBOW_TOTAL;
+                    full0 = (double) gold0Of3 / GOLD_TOTAL;
+                    full1 = (double) gold1Of3 / GOLD_TOTAL;
                 }else if(r >= full0 && r < (full0 + full1)){
                     gold1Of3 -= 1;
                     gold2Of3 += 1;
-                    full2 = (double) gold2Of3 / RAINBOW_TOTAL;
-                    full1 = (double) gold1Of3 / RAINBOW_TOTAL;
+                    full2 = (double) gold2Of3 / GOLD_TOTAL;
+                    full1 = (double) gold1Of3 / GOLD_TOTAL;
                 }else if(r >= (full0 + full1) && r < (full0 + full1 + full2)){
                     gold2Of3 -= 1;
                     gold3Of3 += 1;
-                    full3 = (double) gold3Of3 / RAINBOW_TOTAL;
-                    full2 = (double) gold2Of3 / RAINBOW_TOTAL;
+                    full3 = (double) gold3Of3 / GOLD_TOTAL;
+                    full2 = (double) gold2Of3 / GOLD_TOTAL;
                 }else{
-                    gold2Ether += 450;
+                    gold2Ether += GOLD_FLASH_2_ETHER;
                 }
             }
 
@@ -634,8 +738,8 @@ public class Coin2Ether {
 
         public int getSilverCardTotal(HashMap<Card, Integer> drawResult, boolean isFlash){
 
-            Card silverCard = new Card(false,true,false,false,false,false);
-            Card silverFlashCard = new Card(false,true,false,false,true,false);
+            Card silverCard = new Card(curBullet,false,true,false,false,false,false);
+            Card silverFlashCard = new Card(curBullet,false,true,false,false,true,false);
 
             Card pointedCard;
 
@@ -666,11 +770,11 @@ public class Coin2Ether {
             //System.out.println("银闪 ：" + silverFlashs);
 
             for(int i = 0; i < silvers; i++){
-                silver2Ether += 20;
+                silver2Ether += SILVER_2_ETHER;
             }
 
             for(int i = 0; i < silverFlashs; i++){
-                silver2Ether += 50;
+                silver2Ether += SILVER_FLASH_2_ETHER;
             }
 
             return silver2Ether;
@@ -678,8 +782,8 @@ public class Coin2Ether {
 
         public int getCopperCardTotal(HashMap<Card, Integer> drawResult, boolean isFlash){
 
-            Card copperCard = new Card(true,false,false,false,false,false);
-            Card copperFlashCard = new Card(true,false,false,false,true,false);
+            Card copperCard = new Card(curBullet,true,false,false,false,false,false);
+            Card copperFlashCard = new Card(curBullet,true,false,false,false,true,false);
 
             Card pointedCard;
 
@@ -709,13 +813,12 @@ public class Coin2Ether {
             int copperFlashs = getCopperCardTotal(drawResult, true);
             //System.out.println("铜闪 ：" + copperFlashs);
 
-
             for(int i = 0; i < coppers; i++){
                 copper2Ether += COPPER_2_ETHER;
             }
 
             for(int i = 0; i < copperFlashs; i++){
-                copper2Ether += 20;
+                copper2Ether += COPPER_FLASH_2_ETHER;
             }
 
             return copper2Ether;

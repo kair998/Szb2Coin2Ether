@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>以太转化分析器</title>
+</head>
+<body>
+<h1>《影之诗：超凡世界》抽卡以太转化分析器</h1>
+<form action="/submit" method="post">
+    <label>选择你要抽取的卡包: </label>
+    <select name="packSelect">
+        <option value="1">第一弹卡包：传说揭幕</option>
+        <option value="2">第二弹卡包：无限进化</option>
+    </select><br><br>
+
+    <label>请输入账号信息：</label><br>
+    <input type="text" name="coinTotal" placeholder="预计花费金币总数"><br>
+    <input type="text" name="toMustRainbow" placeholder="距必虹还有多少包"><br><br>
+
+    <input type="text" name="rainbow0Of3" placeholder="多少种虹卡为0张"><br>
+    <input type="text" name="rainbow1Of3" placeholder="多少种虹卡为1张"><br>
+    <input type="text" name="rainbow2Of3" placeholder="多少种虹卡为2张"><br>
+    <input type="text" name="rainbow3Of3" placeholder="多少种虹卡为3张"><br><br>
+
+    <input type="text" name="gold0Of3" placeholder="多少种金卡为0张"><br>
+    <input type="text" name="gold1Of3" placeholder="多少种金卡为1张"><br>
+    <input type="text" name="gold2Of3" placeholder="多少种金卡为2张"><br>
+    <input type="text" name="gold3Of3" placeholder="多少种金卡为3张"><br><br>
+
+    <button type="submit" formaction="simulateOnce">模拟一次</button>
+    <button type="submit" formaction="simulateMany">模拟一万次</button>
+
+</form>
+</body>
+</html>
